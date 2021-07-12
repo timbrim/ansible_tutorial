@@ -1,0 +1,16 @@
+---
+
+- hosts: all
+  become: true
+  tasks:
+
+  - name: remove apache package
+    yum:
+      name: httpd
+      state: absent
+
+
+  - name: remove php support for apache
+    yum:
+      name: php-mysqlnd,php-xml,php-json,php-gd,php-mbstring
+      state: absent

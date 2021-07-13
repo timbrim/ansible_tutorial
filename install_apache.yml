@@ -4,13 +4,28 @@
   become: true
   tasks:
 
-  - name: install apache package
-    yum:
+  - name: install apache package Fedora
+    dnf:
       name: httpd
       state: latest
+    when: ansible_distribution == "Fedora"
 
 
-  - name: add php support for apache
-    yum:
-      name: php-mysqlnd,php-xml,php-json,php-gd,php-mbstring
+  - name: add php support for apache Fedora
+    dnf:
+      name: php,php-mysqlnd,php-xml,php-json,php-gd,php-mbstring
       state: latest
+    when: ansible_distribution == "Fedora"
+
+  - name: install apache2 package Ubuntu
+    apt:
+      name: apache2
+      state: latest
+    when: ansible_distribution == "Ubuntu"
+
+
+  - name: add php support for apache Ubuntu
+    apt:
+      name: php,php-mysqlnd,php-xml,php-json,php-gd,php-mbstring
+      state: latest
+    when: ansible_distribution == "Ubuntu"

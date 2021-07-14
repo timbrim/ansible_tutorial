@@ -40,6 +40,16 @@
        state: latest
      when: ansible_distribution == "Fedora"
 
+   - name: 
+     tags: apache, apache2,httpd
+     copy:  Copy file to web server(s)
+       src: default_site.html
+       dest: /var/www/html/index.html
+       owner: root
+       group: root
+       mode: 0644
+       
+
 - hosts: db_servers
   become: true
   tasks: 

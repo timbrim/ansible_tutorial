@@ -18,6 +18,23 @@
        update_cache: yes
      when: ansible_distribution == "Ubuntu"
 
+- hosts: workstations
+  become: true
+  tasks: 
+
+  - name: install unzip
+    package:
+     name: unzip
+
+  - name: install terraform
+    unarchive:
+      src: https://releases.hashicorp.com/terraform/1.0.2/terraform_1.0.2_linux_amd64.zip
+      dest: /usr/local/bin
+      remote_src: yes
+      owner: root
+      group: root
+      mode: 0755
+
 - hosts: web_servers
   become: true
   tasks:
@@ -39,16 +56,6 @@
          - php
        state: latest
      when: ansible_distribution == "Fedora"
-
-   - name: 
-     tags: apache, apache2,httpd
-     copy:  Copy file to web server(s)
-       src: default_site.html
-       dest: /var/www/html/index.html
-       owner: root
-       group: root
-       mode: 0644
-       
 
 - hosts: db_servers
   become: true

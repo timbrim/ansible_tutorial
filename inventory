@@ -2,10 +2,11 @@
 fedora-1
 
 [web_servers]
-fedora-2
 Ubuntu
+fedora-2
 
 [file_servers]
 fedora-3
 
-
+[workstations]
+git

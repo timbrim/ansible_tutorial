@@ -1,3 +1,11 @@
+[db_servers]
 fedora-1
+
+[web_servers]
 fedora-2
+Ubuntu
+
+[file_servers]
 fedora-3
+
+

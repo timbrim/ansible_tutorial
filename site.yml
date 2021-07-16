@@ -18,6 +18,17 @@
        update_cache: yes
      when: ansible_distribution == "Ubuntu"
 
+   - name: install updates on (CentOS)
+     tags: always
+     yum:
+       name: "*"
+       update_cache: yes
+       update_only: yes
+       state: latest
+       disable_gpg_check: yes
+     when: ansible_distribution == "CentOS"
+
+
 - hosts: workstations
   become: true
   tasks: 
@@ -67,6 +78,14 @@
         name: mariadb-server
         state: latest
       when: ansible_distribution == "Fedora"
+
+    - name: install mariadb package (CentOS)
+      tags: db,mariadb,fedora
+      dnf:
+        name: mariadb-server
+        state: latest
+      when: ansible_distribution == "CentOS"
+
 
     - name: Make sure mariadb service is running
       ansible.builtin.systemd:

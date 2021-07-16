@@ -1,8 +1,9 @@
 [db_servers]
-fedora-1
+CentOS
 
 [web_servers]
 Ubuntu
+fedora-1
 fedora-2
 
 [file_servers]

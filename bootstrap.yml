@@ -1,0 +1,70 @@
+---
+ 
+- hosts: all
+  become: true
+  pre_tasks:
+
+   - name: install updates on (Fedora)
+     tags: always
+     dnf:
+       update_only: yes
+       update_cache: yes
+     when: ansible_distribution == "Fedora"
+
+   - name: install updates on (Ubuntu)
+     tags: always
+     apt:
+       upgrade: dist
+       update_cache: yes
+     when: ansible_distribution == "Ubuntu"
+
+   - name: install latest updates on (CentOS)
+     tags: always
+     yum:
+       name: "*"
+       update_cache: yes
+       update_only: yes
+       state: latest
+       disable_gpg_check: yes
+     when: ansible_distribution == "CentOS"
+
+- hosts: all
+  become: true
+  tasks:
+
+    - name: create thesheriff user
+      tags: always
+      user: 
+        name: thesheriff
+        group: wheel
+      when: ansible_distribution == "CentOS"  
+
+    - name: create thesheriff user
+      tags: always
+      user: 
+        name: thesheriff
+        group: wheel
+      when: ansible_distribution == "Fedora"  
+
+    - name: create thesheriff user
+      tags: always
+      user: 
+        name: thesheriff
+        group: root
+      when: ansible_distribution == "Ubuntu"  
+
+
+    - name: add ssh key for thesheriff
+      tags: always
+      authorized_key:
+        user: thesheriff
+        key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDBexjdXi8EXG8yXEOAeEj7okl90BM6LEFkXUJsMKRc5if44NSfyn6JE4SMl5pVQYDb4f83NpM4Dmfj2wQwHc8qVy3SyYcs75HK2CFfjYOPLdiu7CKDtD3ZKTE5lytfXlG3AQIvA9/92JqTUi/vKrL4AzVk2Aq1BEQnKl2V4o6z3PWViUKO/SIBIFXuF1gdzmdvaYGSrxTToLk/YMyjKlDuLQB9TD2xeMEOrzBIlOoxH5RQPRQgA8UeO8AvsVb4NyQbmbr8z3pX5SMGCeEBGNRSQ42B+guRCGY3U8RoxYVBWnl3hR1Wc9MqxLLdctcp+dCQ0WI0cnX4og/Ks+M79bSFRhN/sEhFUCC0xCltCk7dwxAbpJ+sN1M3ACUJUNt3hh9eYwCt3RPmz8wVLM75buMliZBnuRrdQgPfR6kBjZp8YAWbAQt08U5qN2dq/Aq0L2niQbmKFKxjW60Ov40JljUFXuZ4zVNfHpcgjSVVqJvn4BQJtf8lCLVA1ilSd+K+ID0= tbrim@fedora" 
+
+    - name: add sudoers file for thesheriff
+      tags: always
+      copy: 
+        src: sudoer_thesheriff
+        dest: /etc/sudoers.d/thesheriff
+        owner: root
+        group: root
+        mode: 0440

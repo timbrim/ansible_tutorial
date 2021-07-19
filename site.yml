@@ -4,30 +4,39 @@
   become: true
   pre_tasks:
 
-   - name: install updates on (Fedora)
+   - name: update repo cache (Fedora)
      tags: always
      dnf:
-       update_only: yes
        update_cache: yes
+     changed_when: false
      when: ansible_distribution == "Fedora"
 
-   - name: install updates on (Ubuntu)
+   - name: update repo cache (Ubuntu)
      tags: always
      apt:
-       upgrade: dist
        update_cache: yes
+     changed_when: false
      when: ansible_distribution == "Ubuntu"
 
-   - name: install updates on (CentOS)
+   - name: update repo cache (CentOS)
      tags: always
      yum:
        name: "*"
        update_cache: yes
-       update_only: yes
        state: latest
        disable_gpg_check: yes
+     changed_when: false
      when: ansible_distribution == "CentOS"
 
+- hosts: all
+  become: true
+  tasks:
+
+    - name: add ssh key for thesheriff
+      tags: always
+      authorized_key:
+        user: thesheriff
+        key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDBexjdXi8EXG8yXEOAeEj7okl90BM6LEFkXUJsMKRc5if44NSfyn6JE4SMl5pVQYDb4f83NpM4Dmfj2wQwHc8qVy3SyYcs75HK2CFfjYOPLdiu7CKDtD3ZKTE5lytfXlG3AQIvA9/92JqTUi/vKrL4AzVk2Aq1BEQnKl2V4o6z3PWViUKO/SIBIFXuF1gdzmdvaYGSrxTToLk/YMyjKlDuLQB9TD2xeMEOrzBIlOoxH5RQPRQgA8UeO8AvsVb4NyQbmbr8z3pX5SMGCeEBGNRSQ42B+guRCGY3U8RoxYVBWnl3hR1Wc9MqxLLdctcp+dCQ0WI0cnX4og/Ks+M79bSFRhN/sEhFUCC0xCltCk7dwxAbpJ+sN1M3ACUJUNt3hh9eYwCt3RPmz8wVLM75buMliZBnuRrdQgPfR6kBjZp8YAWbAQt08U5qN2dq/Aq0L2niQbmKFKxjW60Ov40JljUFXuZ4zVNfHpcgjSVVqJvn4BQJtf8lCLVA1ilSd+K+ID0= tbrim@fedora" 
 
 - hosts: workstations
   become: true
@@ -77,6 +86,15 @@
        state: latest
        disable_gpg_check: yes
      when: ansible_distribution == "CentOS"
+
+   - name: start httpd (CentOS)
+     tags: apache,centos,httpd
+     service:
+       name: httpd
+       enabled: yes
+       state: started
+     when: ansible_distribution == "CentOS"
+
 
    - name: copy default html file for site
      tags: apache,apache2,httpd
